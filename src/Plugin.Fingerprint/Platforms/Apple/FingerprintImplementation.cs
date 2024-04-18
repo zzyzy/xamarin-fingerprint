@@ -28,8 +28,7 @@ namespace Plugin.Fingerprint
             Tuple<bool, NSError> resTuple;
             using (cancellationToken.Register(CancelAuthentication))
             {
-                var policy = GetPolicy(authRequestConfig.AllowAlternativeAuthentication);
-                resTuple = await _context.EvaluatePolicyAsync(policy, authRequestConfig.Reason);
+                resTuple = await KeyChainHelper.AuthenticateAsync(_context);
             }
 
             if (resTuple.Item1)
