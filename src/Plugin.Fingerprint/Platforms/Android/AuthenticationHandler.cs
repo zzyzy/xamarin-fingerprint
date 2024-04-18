@@ -3,16 +3,19 @@ using Android.Content;
 using Java.Lang;
 using Plugin.Fingerprint.Abstractions;
 using AndroidX.Biometric;
+using Plugin.Fingerprint.Utils;
 
 namespace Plugin.Fingerprint
 {
     public class AuthenticationHandler : BiometricPrompt.AuthenticationCallback, IDialogInterfaceOnClickListener
     {
         private readonly TaskCompletionSource<FingerprintAuthenticationResult> _taskCompletionSource;
+        private readonly SecureBiometricPromptContext _secureContext;
 
-        public AuthenticationHandler()
+        public AuthenticationHandler(SecureBiometricPromptContext secureContext)
         {
             _taskCompletionSource = new TaskCompletionSource<FingerprintAuthenticationResult>();
+            _secureContext = secureContext;
         }
 
         public Task<FingerprintAuthenticationResult> GetTask()
@@ -31,8 +34,15 @@ namespace Plugin.Fingerprint
         public override void OnAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result)
         {
             base.OnAuthenticationSucceeded(result);
-            var faResult = new FingerprintAuthenticationResult { Status = FingerprintAuthenticationResultStatus.Succeeded };
-            SetResultSafe(faResult);
+
+            var isValid = CryptoUtils.ValidateSecret(result, _secureContext);
+            var faResult = new FingerprintAuthenticationResult
+            {
+                Status = isValid 
+                    ? FingerprintAuthenticationResultStatus.Succeeded 
+                    : FingerprintAuthenticationResultStatus.Failed
+            };
+            _taskCompletionSource.TrySetResult(faResult);
         }
 
         public override void OnAuthenticationError(int errorCode, ICharSequence errString)

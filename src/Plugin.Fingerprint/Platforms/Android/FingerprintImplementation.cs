@@ -13,6 +13,8 @@ using AndroidX.Fragment.App;
 using AndroidX.Lifecycle;
 using Java.Util.Concurrent;
 using System.Linq;
+using AndroidX.Core.Content;
+using Plugin.Fingerprint.Utils;
 
 namespace Plugin.Fingerprint
 {
@@ -77,7 +79,7 @@ namespace Plugin.Fingerprint
                 context.CheckCallingOrSelfPermission(Manifest.Permission.UseFingerprint) != Permission.Granted)
                 return FingerprintAvailability.NoPermission;
 
-            var result = _manager.CanAuthenticate();
+            var result = _manager.CanAuthenticate(BiometricManager.Authenticators.BiometricStrong);
 
             switch (result)
             {
@@ -109,7 +111,8 @@ namespace Plugin.Fingerprint
                     Application.Context.GetString(Android.Resource.String.Cancel) :
                     authRequestConfig.CancelTitle;
 
-                var handler = new AuthenticationHandler();
+                var secureContext = await CryptoUtils.InitializeAsync();
+                var handler = new AuthenticationHandler(secureContext);
                 var builder = new BiometricPrompt.PromptInfo.Builder()
                     .SetTitle(authRequestConfig.Title)
                     .SetConfirmationRequired(authRequestConfig.ConfirmationRequired)
@@ -118,21 +121,24 @@ namespace Plugin.Fingerprint
                 if (authRequestConfig.AllowAlternativeAuthentication)
                 {
                     // It's not allowed to allow alternative auth & set the negative button
-                    builder = builder.SetDeviceCredentialAllowed(authRequestConfig.AllowAlternativeAuthentication);
+                    builder = builder.SetAllowedAuthenticators(BiometricManager.Authenticators.BiometricStrong |
+                                                               BiometricManager.Authenticators.DeviceCredential);
                 }
                 else
                 {
-                    builder = builder.SetNegativeButtonText(cancel);
+                    builder = builder
+                        .SetAllowedAuthenticators(BiometricManager.Authenticators.BiometricStrong)
+                        .SetNegativeButtonText(cancel);
                 }
                 var info = builder.Build();
-                var executor = Executors.NewSingleThreadExecutor();
 
 
                 var activity = (FragmentActivity)CrossFingerprint.CurrentActivity;
+                var executor = ContextCompat.GetMainExecutor(activity);
                 using var dialog = new BiometricPrompt(activity, executor, handler);
                 await using (cancellationToken.Register(() => dialog.CancelAuthentication()))
                 {
-                    dialog.Authenticate(info);
+                    dialog.Authenticate(info, new BiometricPrompt.CryptoObject(secureContext.DecryptionCipher));
                     var result = await handler.GetTask();
 
                     TryReleaseLifecycleObserver(activity, dialog);

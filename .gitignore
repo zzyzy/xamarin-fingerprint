@@ -214,3 +214,6 @@ tools/*
 artifacts/
 *.nupkg
 *.binlog
+
+.idea
+.DS_Store
