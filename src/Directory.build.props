@@ -6,7 +6,7 @@
     <Copyright>Copyright (c) Sven-Michael Stübe</Copyright> 
     <Authors>Sven-Michael Stübe</Authors>
     <Owners>Sven-Michael Stübe</Owners>
-    <Version>2.1.5</Version>
+    <Version>2.1.5-lzz.1</Version>
     
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RepositoryUrl>https://github.com/smstuebe/xamarin-fingerprint</RepositoryUrl>
@@ -39,6 +39,8 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
   </PropertyGroup>

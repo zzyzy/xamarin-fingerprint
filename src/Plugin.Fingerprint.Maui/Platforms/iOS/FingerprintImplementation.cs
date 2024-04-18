@@ -159,7 +159,7 @@ namespace Plugin.Fingerprint
                     result.Status = FingerprintAuthenticationResultStatus.FallbackRequested;
                     break;
 
-                case LAStatus.TouchIDLockout:
+                case LAStatus.BiometryLockout:
                     result.Status = FingerprintAuthenticationResultStatus.TooManyAttempts;
                     break;
 

@@ -1,6 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net45;Xamarin.Mac20;Xamarin.iOS10;Xamarin.TVOS10;Xamarin.WatchOS10;MonoAndroid90;uap10.0.19041;Tizen40;</TargetFrameworks>
+<!--    <TargetFrameworks>netstandard2.0;net45;Xamarin.Mac20;Xamarin.iOS10;Xamarin.TVOS10;Xamarin.WatchOS10;MonoAndroid13.0;uap10.0.19041;Tizen40;</TargetFrameworks>-->
+    <TargetFrameworks>netstandard2.0;Xamarin.iOS10;MonoAndroid13.0</TargetFrameworks>
     <LangVersion>8</LangVersion>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 
@@ -40,7 +41,7 @@
   <!-- Android -->
   <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
     <Compile Include="Platforms\Android\**\*.cs" />
-    <PackageReference Include="Xamarin.AndroidX.Biometric" Version="1.1.0" />
+    <PackageReference Include="Xamarin.AndroidX.Biometric" Version="1.1.0.19" />
   </ItemGroup>
 
   <PropertyGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">

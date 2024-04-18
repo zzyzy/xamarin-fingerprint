@@ -15,6 +15,7 @@ using Java.Util.Concurrent;
 using System.Linq;
 using AndroidX.Core.Content;
 using Plugin.Fingerprint.Utils;
+using Application = Android.App.Application;
 
 namespace Plugin.Fingerprint
 {
@@ -101,8 +102,9 @@ namespace Plugin.Fingerprint
             if (string.IsNullOrWhiteSpace(authRequestConfig.Title))
                 throw new ArgumentException("Title must not be null or empty on Android.", nameof(authRequestConfig.Title));
 
-            if (!(CrossFingerprint.CurrentActivity is FragmentActivity))
-                throw new InvalidOperationException($"Expected current activity to be '{typeof(FragmentActivity).FullName}' but was '{CrossFingerprint.CurrentActivity?.GetType().FullName}'. " +
+            var activity = Platform.CurrentActivity;
+            if (activity is not FragmentActivity fragmentActivity)
+                throw new InvalidOperationException($"Expected current activity to be '{typeof(FragmentActivity).FullName}' but was '{activity?.GetType().FullName}'. " +
                                                     "You need to use AndroidX. Have you installed Xamarin.AndroidX.Migration in your Android App project!?");
 
             try
@@ -133,15 +135,14 @@ namespace Plugin.Fingerprint
                 var info = builder.Build();
 
 
-                var activity = (FragmentActivity)CrossFingerprint.CurrentActivity;
                 var executor = ContextCompat.GetMainExecutor(activity);
-                using var dialog = new BiometricPrompt(activity, executor, handler);
+                using var dialog = new BiometricPrompt(fragmentActivity, executor, handler);
                 await using (cancellationToken.Register(() => dialog.CancelAuthentication()))
                 {
                     dialog.Authenticate(info, new BiometricPrompt.CryptoObject(secureContext.DecryptionCipher));
                     var result = await handler.GetTask();
 
-                    TryReleaseLifecycleObserver(activity, dialog);
+                    TryReleaseLifecycleObserver(fragmentActivity, dialog);
 
                     return result;
                 }

@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.Fingerprint.Maui", "Plugin.Fingerprint.Maui\Plugin.Fingerprint.Maui.csproj", "{3F25FAB8-0CDB-4A66-916C-C100587B60E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleMaui", "SampleMaui\SampleMaui.csproj", "{916B9FBD-F89C-4260-A4D3-072051B321BE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3F25FAB8-0CDB-4A66-916C-C100587B60E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F25FAB8-0CDB-4A66-916C-C100587B60E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F25FAB8-0CDB-4A66-916C-C100587B60E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F25FAB8-0CDB-4A66-916C-C100587B60E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{916B9FBD-F89C-4260-A4D3-072051B321BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{916B9FBD-F89C-4260-A4D3-072051B321BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{916B9FBD-F89C-4260-A4D3-072051B321BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{916B9FBD-F89C-4260-A4D3-072051B321BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
