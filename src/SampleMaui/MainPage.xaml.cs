@@ -1,23 +1,41 @@
-﻿namespace SampleMaui;
+﻿using Plugin.Fingerprint;
+using Plugin.Fingerprint.Abstractions;
+
+namespace SampleMaui;
 
 public partial class MainPage : ContentPage
 {
-    int count = 0;
-
     public MainPage()
     {
         InitializeComponent();
     }
 
-    private void OnCounterClicked(object sender, EventArgs e)
+    private async void BtnAuthenticate_OnClicked(object? sender, EventArgs e)
     {
-        count++;
+        if (IsBusy) return;
+        IsBusy = true;
 
-        if (count == 1)
-            CounterBtn.Text = $"Clicked {count} time";
-        else
-            CounterBtn.Text = $"Clicked {count} times";
+        try
+        {
+            var request = new AuthenticationRequestConfiguration("Biometrics", "Confirm biometrics to continue");
+            var result = await CrossFingerprint.Current.AuthenticateAsync(request);
 
-        SemanticScreenReader.Announce(CounterBtn.Text);
+            await DisplayAlert(
+                result.Status == FingerprintAuthenticationResultStatus.Succeeded
+                    ? "Success"
+                    : "Failed",
+                result.Status == FingerprintAuthenticationResultStatus.Succeeded
+                    ? "Auth Success"
+                    : "Auth Failed",
+                "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Exception", ex.ToString(), "OK");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 }

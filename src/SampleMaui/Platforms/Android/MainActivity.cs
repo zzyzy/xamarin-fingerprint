@@ -2,6 +2,8 @@
 using Android.Content.PM;
 using Android.OS;
 
+[assembly: UsesPermission(Android.Manifest.Permission.UseBiometric)]
+
 namespace SampleMaui;
 
 [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true,
